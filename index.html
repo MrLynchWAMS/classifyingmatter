@@ -1,282 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classifying Matter Flow Chart</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classifying Matter Detective</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#eef2ff;color:#1e293b}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+h1{margin:4px 0 12px;font-size:1.6rem;text-align:center;color:#3730a3}
+nav{display:flex;gap:6px;margin-bottom:12px}
+nav button{flex:1;padding:10px 4px;border:0;border-radius:12px;background:#fff;font-weight:700;font-size:.9rem;cursor:pointer;color:#475569;box-shadow:0 1px 3px #0001}
+nav button.on{background:#4f46e5;color:#fff}
+.card{background:#fff;border-radius:20px;box-shadow:0 8px 24px #4f46e522;padding:22px;animation:in .3s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.step{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6366f1;text-align:center}
+.q{font-size:1.45rem;font-weight:800;text-align:center;margin:6px 0 16px;line-height:1.25}
+.hint{background:#f1f5f9;border-radius:12px;padding:10px 14px;font-size:.92rem;margin:14px 0 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn{border:0;border-radius:14px;padding:14px 22px;font-size:1.05rem;font-weight:800;color:#fff;cursor:pointer;transition:transform .1s}
+.btn:hover{transform:scale(1.04)}
+.yes{background:#10b981;min-width:130px}.no{background:#f43f5e;min-width:130px}.pri{background:#4f46e5}.dark{background:#334155}
+.opt{background:#fff;border:3px solid #e2e8f0;border-radius:16px;padding:8px;cursor:pointer;width:calc(50% - 6px);font:inherit;text-align:center}
+.opt:hover{border-color:#6366f1}
+.opt b{display:block;font-size:.88rem;margin-top:2px}
+.opt svg{width:100%;height:auto;background:#f8fafc;border-radius:10px}
+.big{display:flex;flex-direction:column;gap:10px}
+.big .opt{width:100%;text-align:left;padding:16px;display:flex;gap:14px;align-items:center;font-size:1.05rem;font-weight:700}
+.big .opt span{font-size:2rem}
+.crumbs{font-size:.8rem;color:#64748b;margin-bottom:10px;text-align:center}
+.crumbs i{font-style:normal;background:#e0e7ff;color:#3730a3;border-radius:99px;padding:2px 9px;margin:2px;display:inline-block}
+.back{background:none;border:0;color:#6366f1;font-weight:700;cursor:pointer;margin-top:14px}
+.tree{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;margin:0 0 14px;font-size:.85rem;font-weight:700}
+.tree span{padding:3px 11px;border-radius:99px;background:#e2e8f0}
+.tree .last{color:#fff}
+.res{text-align:center;border:4px solid;border-radius:18px;padding:18px;margin-bottom:14px}
+.res .em{font-size:3.4rem}.res h2{margin:4px 0;font-size:1.8rem}.res .fam{font-weight:800;text-transform:uppercase;font-size:.78rem;letter-spacing:.07em;opacity:.8}
+.info{display:grid;gap:8px;text-align:left;font-size:.95rem;margin-bottom:14px}
+.info div{background:#f8fafc;border-radius:10px;padding:9px 13px}
+.info b{color:#4f46e5}
+input[type=text]{width:100%;padding:14px;font-size:1.2rem;border:3px solid #c7d2fe;border-radius:14px;margin:8px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px}
+.chip{border:0;background:#e0e7ff;color:#3730a3;font-weight:700;border-radius:99px;padding:6px 12px;cursor:pointer}
+.atoms{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:12px 0}
+.at{text-align:center;font-size:.8rem;font-weight:700}
+.at div{width:54px;height:54px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;margin:0 auto 2px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.grid button{border:0;border-radius:12px;padding:12px 6px;color:#fff;font-weight:800;cursor:pointer;font-size:.95rem}
+.fb{padding:12px;border-radius:12px;margin-top:12px;font-weight:600}
+.ok{background:#d1fae5;color:#065f46}.bad{background:#ffe4e6;color:#9f1239}
+.score{display:flex;justify-content:space-between;font-weight:800;color:#4f46e5;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+td,th{padding:7px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:top}
+@media(max-width:520px){.q{font-size:1.2rem}.grid{grid-template-columns:1fr}}
+</style>
 </head>
-<body class="bg-slate-50 font-sans text-gray-800 antialiased">
-
-    <div class="min-h-screen flex flex-col items-center py-10 px-4">
-        
-        <!-- Main Flow Chart Card -->
-        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-xl overflow-hidden mb-8 transition-all duration-300 min-h-[450px] flex flex-col">
-            <!-- Header Ribbon -->
-            <div class="bg-indigo-600 h-2 w-full"></div>
-            
-            <!-- Dynamic Content Area -->
-            <div id="app-container" class="p-8 md:p-12 flex-grow flex items-center justify-center">
-                <!-- Content injected via JS -->
-            </div>
-        </div>
-
-        <!-- Summary Rules Section (Static) -->
-        <div class="w-full max-w-2xl bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden animate-fade-in" style="animation-delay: 0.2s;">
-            <div class="bg-gray-50 p-4 border-b border-gray-200 flex items-center space-x-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                <h3 class="font-bold text-gray-800">Quick Summary Rules</h3>
-            </div>
-            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                    <h4 class="font-bold text-blue-900 mb-2 flex items-center">
-                        <span class="bg-blue-200 p-1 rounded-md mr-2 text-sm">🧪</span>
-                        Pure Substances
-                    </h4>
-                    <p class="text-sm text-blue-800 mb-2 font-semibold">Elements & Compounds</p>
-                    <ul class="text-sm text-blue-700 list-disc list-inside space-y-1">
-                        <li>Fixed, definite composition.</li>
-                        <li>Cannot be separated physically.</li>
-                        <li>Chemically combined (if compound).</li>
-                    </ul>
-                </div>
-                
-                <div class="bg-green-50 rounded-xl p-4 border border-green-100">
-                    <h4 class="font-bold text-green-900 mb-2 flex items-center">
-                        <span class="bg-green-200 p-1 rounded-md mr-2 text-sm">🥣</span>
-                        Mixtures
-                    </h4>
-                    <p class="text-sm text-green-800 mb-2 font-semibold">Solutions, Colloids, Suspensions, Mechanical</p>
-                    <ul class="text-sm text-green-700 list-disc list-inside space-y-1">
-                        <li>Variable composition.</li>
-                        <li>Can be separated physically.</li>
-                        <li>Not chemically bonded.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        // Data Configuration
-        const RESULTS = {
-            element: {
-                title: "ELEMENT",
-                subtitle: "Pure Substance",
-                description: "Made of only one kind of atom. Atoms can be single (He, Fe) or bonded with the SAME element (O₂, N₂).",
-                examples: "Helium, Iron, Oxygen gas, Gold",
-                emoji: "🪙",
-                colorClass: "bg-yellow-100 text-yellow-800 border-yellow-300"
-            },
-            compound: {
-                title: "PURE COMPOUND",
-                subtitle: "Pure Substance",
-                description: "Every molecule/particle has the exact same combination of different atoms chemically bonded together in a fixed ratio.",
-                examples: "Water (H₂O), Carbon Dioxide (CO₂), Salt (NaCl)",
-                emoji: "💧",
-                colorClass: "bg-blue-100 text-blue-800 border-blue-300"
-            },
-            solution: {
-                title: "SOLUTION",
-                subtitle: "Homogeneous Mixture",
-                description: "A uniform mixture where particles do not scatter light.",
-                examples: "Salt water, air, brass",
-                emoji: "🌊",
-                colorClass: "bg-cyan-100 text-cyan-800 border-cyan-300"
-            },
-            colloid: {
-                title: "COLLOID",
-                subtitle: "Homogeneous Mixture",
-                description: "A uniform mixture where particles are large enough to scatter light (Tyndall Effect).",
-                examples: "Milk, fog, mayonnaise",
-                emoji: "🥛",
-                colorClass: "bg-indigo-100 text-indigo-800 border-indigo-300"
-            },
-            suspension: {
-                title: "SUSPENSION",
-                subtitle: "Heterogeneous Mixture",
-                description: "A mixture where particles settle out over time or can be separated by filtering.",
-                examples: "Muddy water, Italian dressing",
-                emoji: "🫙",
-                colorClass: "bg-amber-100 text-amber-800 border-amber-300"
-            },
-            mechanical: {
-                title: "MECHANICAL MIXTURE",
-                subtitle: "Heterogeneous Mixture",
-                description: "A mixture where the different substances remain visually distinct and do not settle out.",
-                examples: "Trail mix, granite, salad",
-                emoji: "🥗",
-                colorClass: "bg-green-100 text-green-800 border-green-300"
-            },
-            error: {
-                title: "Wait a minute!",
-                subtitle: "Logic Error",
-                description: "Recheck Steps 1 & 2. All matter is either a pure substance or a mixture! If it's not physically combined, it must be a pure substance.",
-                examples: null,
-                emoji: "🤔",
-                colorClass: "bg-red-100 text-red-800 border-red-300"
-            }
-        };
-
-        const container = document.getElementById('app-container');
-
-        // Application State & Logic
-        function renderStart() {
-            container.innerHTML = `
-                <div class="text-center animate-fade-in w-full">
-                    <div class="flex justify-center mb-6 text-indigo-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
-                    </div>
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Classifying Matter</h2>
-                    <p class="text-gray-600 mb-8 max-w-md mx-auto">
-                        Use this interactive flow chart to identify whether a substance is an element, compound, solution, colloid, suspension, or mechanical mixture.
-                    </p>
-                    <button onclick="renderStep('step1')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105 flex items-center justify-center mx-auto space-x-2">
-                        <span>Start Identification</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
-                </div>
-            `;
-        }
-
-        function renderQuestionCard(stepNum, question, onYes, onNo, hint = "") {
-            let hintHTML = "";
-            if (hint) {
-                hintHTML = `
-                    <div class="bg-gray-50 rounded-lg p-4 flex items-start space-x-3 mt-4 text-left">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400 flex-shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                        <p class="text-sm text-gray-600">${hint}</p>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = `
-                <div class="animate-fade-in flex flex-col h-full w-full">
-                    <span class="text-indigo-500 font-bold uppercase tracking-wider text-sm mb-2 block text-center">
-                        ${stepNum}
-                    </span>
-                    <h3 class="text-2xl md:text-3xl font-extrabold text-gray-800 mb-8 text-center leading-tight">
-                        ${question}
-                    </h3>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center mt-auto mb-8">
-                        <button onclick="${onYes}" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 px-10 rounded-2xl text-xl transition-transform transform hover:scale-105 shadow-md flex-1 max-w-[200px] mx-auto w-full">
-                            YES
-                        </button>
-                        <button onclick="${onNo}" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 px-10 rounded-2xl text-xl transition-transform transform hover:scale-105 shadow-md flex-1 max-w-[200px] mx-auto w-full">
-                            NO
-                        </button>
-                    </div>
-
-                    ${hintHTML}
-                </div>
-            `;
-        }
-
-        function showResult(resultKey) {
-            const res = RESULTS[resultKey];
-            let examplesHTML = "";
-            if (res.examples) {
-                examplesHTML = `
-                    <div class="mb-8">
-                        <h4 class="text-gray-500 text-sm font-semibold uppercase mb-2">Examples</h4>
-                        <p class="text-gray-800 font-medium text-lg">${res.examples}</p>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = `
-                <div class="text-center animate-fade-in w-full">
-                    <div class="inline-block p-6 rounded-2xl mb-6 border-4 shadow-sm ${res.colorClass}">
-                        <div class="text-6xl mb-4">${res.emoji}</div>
-                        <p class="text-sm font-bold uppercase tracking-wider opacity-80 mb-1">${res.subtitle}</p>
-                        <h2 class="text-3xl font-extrabold mb-4">${res.title}</h2>
-                        <p class="text-lg font-medium opacity-90 max-w-md mx-auto">${res.description}</p>
-                    </div>
-                    
-                    ${examplesHTML}
-
-                    <button onclick="renderStart()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105 flex items-center justify-center mx-auto space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-                        <span>Start Over</span>
-                    </button>
-                </div>
-            `;
-        }
-
-        function renderStep(step) {
-            switch(step) {
-                case 'step1':
-                    renderQuestionCard(
-                        "Step 1",
-                        "Is there only ONE type of atom present?",
-                        "showResult('element')",
-                        "renderStep('step2')",
-                        "Think about the chemical formula. Does it only have one capital letter? (e.g., Fe, O₂)"
-                    );
-                    break;
-                case 'step2':
-                    renderQuestionCard(
-                        "Step 2",
-                        "Are two or more DIFFERENT elements chemically bonded together in a fixed ratio?",
-                        "showResult('compound')",
-                        "renderStep('step3')",
-                        "Look for multiple capital letters grouped together in a formula (e.g., H₂O, NaCl)."
-                    );
-                    break;
-                case 'step3':
-                    renderQuestionCard(
-                        "Step 3",
-                        "Are there two or more different substances physically combined?",
-                        "renderStep('step4')",
-                        "showResult('error')",
-                        "Can they be separated by physical means like filtering, boiling, or sorting?"
-                    );
-                    break;
-                case 'step4':
-                    renderQuestionCard(
-                        "Step 4",
-                        "Is the mixture uniform (looks completely the same throughout)?",
-                        "renderStep('step5a')",
-                        "renderStep('step5b')",
-                        "If you take a sample from the top and the bottom, will they be exactly identical?"
-                    );
-                    break;
-                case 'step5a':
-                    renderQuestionCard(
-                        "Step 5a (Homogeneous)",
-                        "Do particles scatter light (Tyndall Effect)?",
-                        "showResult('colloid')",
-                        "showResult('solution')",
-                        "If you shine a laser through it, can you see the beam of light?"
-                    );
-                    break;
-                case 'step5b':
-                    renderQuestionCard(
-                        "Step 5b (Heterogeneous)",
-                        "Do particles settle out over time or can they be separated by filtering?",
-                        "showResult('suspension')",
-                        "showResult('mechanical')",
-                        "Think of what happens if you leave it sitting still for a few hours."
-                    );
-                    break;
-            }
-        }
-
-        // Initialize App
-        window.onload = () => {
-            renderStart();
-        };
-    </script>
+<body>
+<div class="wrap">
+<h1>🔬 Classifying Matter Detective</h1>
+<nav id="nav"></nav>
+<div id="view"></div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const T={
+element:{n:'Element',e:'🪙',fam:'Pure Substance',sub:'',c:'#d97706',bg:'#fef3c7',d:'Only ONE kind of atom. Atoms can be alone (He, Fe) or joined to the same kind (O₂, N₂, O₃).',ex:'Helium, iron, oxygen gas, gold, diamond (carbon)',clue:'Formula has one capital letter. In a diagram, every particle is the same color.',mix:'O₂ is still an element! The atoms are bonded, but they are all the SAME atom.'},
+compound:{n:'Compound',e:'💧',fam:'Pure Substance',sub:'',c:'#2563eb',bg:'#dbeafe',d:'Two or more DIFFERENT elements chemically bonded in a fixed ratio. Every particle is identical.',ex:'Water (H₂O), carbon dioxide (CO₂), salt (NaCl), sugar',clue:'Formula has 2+ capital letters. In a diagram, every molecule is identical and has 2+ colors.',mix:'Compounds have totally different properties than their elements: Na is a explosive metal and Cl₂ is a poison gas, but NaCl is table salt!'},
+solution:{n:'Solution',e:'🌊',fam:'Mixture',sub:'Homogeneous',c:'#0891b2',bg:'#cffafe',d:'Looks the same everywhere. Particles are so tiny they never settle and do NOT scatter light.',ex:'Salt water, air, brass, vinegar',clue:'Clear (can have color) and a laser beam passes straight through.',mix:'Salt water is NOT a compound: salt and water are not bonded, and you can make it saltier or weaker.'},
+colloid:{n:'Colloid',e:'🥛',fam:'Mixture',sub:'Homogeneous',c:'#7c3aed',bg:'#ede9fe',d:'Looks uniform, but particles are big enough to scatter light (Tyndall Effect). They never settle.',ex:'Milk, fog, mayonnaise, whipped cream, gelatin',clue:'Cloudy or milky and you can see the laser beam inside it.',mix:'Milk looks like a solution, but shine a flashlight through it and the beam shows up!'},
+suspension:{n:'Suspension',e:'🫙',fam:'Mixture',sub:'Heterogeneous',c:'#b45309',bg:'#fde68a',d:'Bigger particles float for a while, then SETTLE out or get caught by a filter.',ex:'Muddy water, Italian dressing, orange juice with pulp',clue:'Shake it, wait, and it separates into layers.',mix:'Solutions never settle. If it separates when it sits, it is a suspension.'},
+mechanical:{n:'Mechanical Mixture',e:'🥗',fam:'Mixture',sub:'Heterogeneous',c:'#16a34a',bg:'#dcfce7',d:'Different pieces you can see and pick apart. They do not float and settle; they just sit there.',ex:'Trail mix, granite, salad, pizza, sand + iron filings',clue:'You can point to the different parts with your finger.',mix:'Granite looks like one rock, but it is made of different mineral crystals, so it is a mixture.'}
+};
+T.compound.mix=T.compound.mix.replace('a explosive','an explosive');
+// name, formula, type
+const DB=[['Helium','He','element'],['Iron','Fe','element'],['Oxygen gas','O₂','element'],['Gold','Au','element'],['Nitrogen gas','N₂','element'],['Ozone','O₃','element'],['Diamond','C','element'],['Copper wire','Cu','element'],['Water','H₂O','compound'],['Carbon dioxide','CO₂','compound'],['Table salt','NaCl','compound'],['Sugar','C₁₂H₂₂O₁₁','compound'],['Baking soda','NaHCO₃','compound'],['Ammonia','NH₃','compound'],['Methane','CH₄','compound'],['Hydrogen peroxide','H₂O₂','compound'],['Salt water','','solution'],['Air','','solution'],['Brass','','solution'],['Vinegar','','solution'],['Soda (no bubbles)','','solution'],['Milk','','colloid'],['Fog','','colloid'],['Mayonnaise','','colloid'],['Whipped cream','','colloid'],['Gelatin dessert','','colloid'],['Muddy water','','suspension'],['Italian dressing','','suspension'],['Orange juice with pulp','','suspension'],['Trail mix','','mechanical'],['Granite','','mechanical'],['Salad','','mechanical'],['Pizza','','mechanical'],['Sand and iron filings','','mechanical']];
+const SYM=new Set("H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Nd Sm Gd Dy Er Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu".split(" "));
+const R='#ef4444',B='#3b82f6';
+function mol(a,b){return `<svg viewBox="0 0 130 90">${b.map(([i,j])=>`<line x1="${a[i][0]}" y1="${a[i][1]}" x2="${a[j][0]}" y2="${a[j][1]}" stroke="#475569" stroke-width="4"/>`).join('')}${a.map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="9" fill="${c}"/>`).join('')}</svg>`}
+const D=[
+mol([[20,20,R],[70,30,R],[110,18,R],[40,62,R],[90,66,R],[115,58,R]],[]),
+mol([[18,22,R],[36,30,R],[80,15,R],[98,22,R],[50,65,R],[68,58,R],[105,62,R],[118,52,R]],[[0,1],[2,3],[4,5],[6,7]]),
+mol([[25,22,B],[10,38,R],[42,38,R],[85,18,B],[70,34,R],[100,34,R],[60,66,B],[45,80,R],[77,80,R]],[[0,1],[0,2],[3,4],[3,5],[6,7],[6,8]]),
+mol([[20,20,R],[38,28,R],[95,20,R],[112,28,R],[30,64,B],[15,78,R],[45,78,R],[95,64,B],[80,78,R],[110,78,R]],[[0,1],[2,3],[4,5],[4,6],[7,8],[7,9]])];
+const tyn=`<svg viewBox="0 0 280 100" style="width:100%;max-width:340px;display:block;margin:0 auto 10px"><defs><linearGradient id="g"><stop offset="0" stop-color="#fde047" stop-opacity=".9"/><stop offset="1" stop-color="#fde047" stop-opacity=".7"/></linearGradient></defs>
+<rect x="45" y="22" width="60" height="62" rx="8" fill="#bae6fd" stroke="#475569" stroke-width="2"/><rect x="175" y="22" width="60" height="62" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+<rect x="2" y="50" width="43" height="5" fill="url(#g)"/><rect x="105" y="50" width="70" height="5" fill="url(#g)"/><rect x="175" y="50" width="60" height="5" fill="url(#g)"/><rect x="235" y="50" width="30" height="5" fill="url(#g)" opacity=".5"/>
+<rect x="45" y="50" width="60" height="5" fill="#fde047" opacity=".25"/>
+<text x="75" y="97" text-anchor="middle" font-size="11" font-weight="700">Beam passes (no glow)</text><text x="205" y="97" text-anchor="middle" font-size="11" font-weight="700">Beam glows inside!</text></svg>`;
+const N={
+start:{t:'What are you looking at?',s:'Start here',big:[['🧬','A molecular-scale diagram (atoms / molecules)','diag'],['📸','A real sample or photograph (macro scale)','m1'],['🔤','A chemical formula or substance name','LAB']]},
+diag:{t:'Which picture matches what you see?',s:'Diagram path',h:'Look at the colors. Same color = same kind of atom. Lines = chemical bonds.',cards:[['One kind of atom, all separate',D[0],'R:element'],['One kind of atom, joined together',D[1],'R:element'],['Identical molecules, each with 2+ colors',D[2],'R:compound'],['Two or more different kinds of particles mixed',D[3],'u']]},
+u:{t:'Is the mixture uniform (the same throughout)?',s:'Mixture found!',h:'Take a sample from the top and the bottom. Are they exactly the same?',y:'ty',n:'het'},
+m1:{t:'Can you see 2 or more different materials, chunks, layers or specks?',s:'Macro path · Step 1',h:'Look closely! Granite has crystals, salad has veggies, muddy water has dirt.',y:'het',n:'m2'},
+m2:{t:'Is it made of MORE THAN ONE substance?',s:'Macro path · Step 2',h:'Check the ingredient list. Could you separate it by boiling, evaporating, or filtering? (Salt water: boil it and salt remains.)',y:'ty',n:'m3'},
+m3:{t:'Can it be broken into simpler substances by a chemical change?',s:'Macro path · Step 3',h:'Water splits into hydrogen and oxygen with electricity (YES). Gold cannot be broken down any more (NO).',y:'R:compound',n:'R:element'},
+ty:{t:'Does it scatter light? Can you see the beam of a laser or flashlight?',s:'Tyndall Effect test',h:'Beam visible = Colloid. Beam invisible inside = Solution.',pre:tyn,y:'R:colloid',n:'R:solution'},
+het:{t:'If it sits still, do tiny particles settle out or get caught by a filter?',s:'Heterogeneous mixture',h:'Suspension = tiny bits that float, then settle (shake before use!). Mechanical = chunks you could pick out with your hands.',y:'R:suspension',n:'R:mechanical'}};
+let tab='id',node='start',hist=[],sc={r:0,t:0,s:0},cur=null,answered=false,labIn='';
+function tree(k){const t=T[k],p=['Matter',t.fam];if(t.sub)p.push(t.sub);p.push(t.n);return `<div class="tree">${p.map((x,i)=>`<span ${i==p.length-1?`class="last" style="background:${t.c}"`:''}>${x}</span>`).join(' › ')}</div>`}
+function resCard(k){const t=T[k];return `<div class="res" style="background:${t.bg};border-color:${t.c};color:${t.c}"><div class="em">${t.e}</div><div class="fam">${t.fam}${t.sub?' · '+t.sub:''}</div><h2>${t.n}</h2><div style="color:#1e293b;font-weight:600">${t.d}</div></div><div class="info"><div><b>Examples:</b> ${t.ex}</div><div><b>🔎 Clue:</b> ${t.clue}</div><div><b>⚠️ Common mix-up:</b> ${t.mix}</div></div>`}
+function go(n,l){if(n=='LAB'){tab='lab';return draw()}hist.push([node,l]);node=n;draw()}
+function back(){const h=hist.pop();node=h[0];draw()}
+function reset(){node='start';hist=[];draw()}
+function idView(){
+if(node.startsWith('R:')){const k=node.slice(2);return `<div class="card">${hist.length?`<div class="crumbs">${hist.map(h=>`<i>${h[1]}</i>`).join('›')}</div>`:''}${tree(k)}${resCard(k)}<div class="row"><button class="btn pri" onclick="reset()">🔄 Start Over</button><button class="btn dark" onclick="tab='ch';draw()">🎯 Try Challenge</button></div></div>`}
+const n=N[node];let h=`<div class="card"><div class="step">${n.s}</div>`;
+if(hist.length)h+=`<div class="crumbs">${hist.map(x=>`<i>${x[1]}</i>`).join('›')}</div>`;
+h+=`<div class="q">${n.t}</div>${n.pre||''}`;
+if(n.big)h+=`<div class="big">${n.big.map(b=>`<button class="opt" onclick="go('${b[2]}','${b[1].split(' (')[0].replace(/'/g,'')}')"><span>${b[0]}</span>${b[1]}</button>`).join('')}</div>`;
+else if(n.cards)h+=`<div class="row">${n.cards.map(c=>`<button class="opt" onclick="go('${c[2]}','${c[0].split(',')[0]}')">${c[1]}<b>${c[0]}</b></button>`).join('')}</div>`;
+else h+=`<div class="row"><button class="btn yes" onclick="go('${n.y}','Yes')">YES</button><button class="btn no" onclick="go('${n.n}','No')">NO</button></div>`;
+if(n.h)h+=`<div class="hint">💡 ${n.h}</div>`;
+if(hist.length)h+=`<div style="text-align:center"><button class="back" onclick="back()">← Back</button></div>`;
+return h+'</div>'}
+function parse(s){s=s.replace(/[₀-₉]/g,c=>c.charCodeAt(0)-8320).replace(/\s/g,'');if(!s||!/^([A-Z][a-z]?\d*|\(|\)\d*)+$/.test(s))return null;
+let g=0;while(/\(([^()]*)\)(\d*)/.test(s)&&g++<9)s=s.replace(/\(([^()]*)\)(\d*)/,(m,a,n)=>a.repeat(+n||1));
+const c={};let bad=false;s.replace(/([A-Z][a-z]?)(\d*)/g,(m,e,n)=>{if(!SYM.has(e))bad=true;c[e]=(c[e]||0)+(+n||1)});return bad||!Object.keys(c).length?null:c}
+const hue=e=>[...e].reduce((a,c)=>a*31+c.charCodeAt(0),7)%360;
+function bubbles(c){return `<div class="atoms">${Object.entries(c).map(([e,n])=>`<div class="at"><div style="background:hsl(${hue(e)},60%,45%)">${e}</div>×${n}</div>`).join('')}</div>`}
+const sub=s=>s.replace(/\d/g,d=>'₀₁₂₃₄₅₆₇₈₉'[d]);
+function labResult(q){q=q.trim();if(!q)return '';
+if(q.includes('+')){const parts=q.split('+').map(x=>x.trim()).filter(Boolean);return `<div class="res" style="background:#dcfce7;border-color:#16a34a;color:#16a34a"><div class="em">🥣</div><h2>Mixture!</h2><div style="color:#1e293b;font-weight:600">${parts.join(' + ')}: different substances physically combined. A mixture can't be written as one formula. Use the <b>Identify</b> tab to find out which type.</div></div>`}
+const low=q.toLowerCase(),f=DB.find(d=>d[0].toLowerCase()==low||(d[1]&&d[1]==sub(q.replace(/\s/g,''))));
+if(f){const c=f[1]?parse(f[1]):null;return `<div style="text-align:center;font-weight:800;margin-top:6px">${f[0]} ${f[1]?'('+f[1]+')':''}</div>${c?bubbles(c):''}${tree(f[2])}${resCard(f[2])}`}
+const c=parse(q);if(c){const k=Object.keys(c).length==1?'element':'compound';return `<div style="text-align:center;font-weight:800">${sub(q)} contains <b>${Object.keys(c).length}</b> kind${Object.keys(c).length>1?'s':''} of atom</div>${bubbles(c)}${tree(k)}${resCard(k)}`}
+return `<div class="hint">🤔 I don't know that one. For formulas, check capitals (<b>Co</b> is cobalt, <b>CO</b> is carbon monoxide). Or use the <b>Identify</b> tab.</div>`}
+function labView(){return `<div class="card"><div class="step">Formula Lab</div><div class="q">Type a formula or substance name</div><input type="text" id="li" placeholder="Try H2O, NaCl, O2, milk..." value="${labIn}" oninput="labIn=this.value;$('#lo').innerHTML=labResult(labIn)" autocomplete="off"><div class="chips">${['H2O','NaCl','O2','Fe','Ca(OH)2','NaCl + H2O','milk','granite'].map(x=>`<button class="chip" onclick="labIn='${x}';draw()">${x}</button>`).join('')}</div><div id="lo">${labResult(labIn)}</div><div class="hint">💡 Count the capital letters: <b>1 kind</b> of atom = element. <b>2+ kinds</b> bonded = compound. A "+" between substances = mixture.</div></div>`}
+function chView(){if(!cur)cur=DB[Math.floor(Math.random()*DB.length)];
+const keys=Object.keys(T);let h=`<div class="card"><div class="score"><span>✅ ${sc.r}/${sc.t}</span><span>🔥 Streak: ${sc.s}</span></div><div class="step">What type of matter is this?</div><div class="q">${cur[0]}${cur[1]?`<br><span style="color:#4f46e5">${cur[1]}</span>`:''}</div>`;
+h+=`<div class="grid">${keys.map(k=>`<button style="background:${T[k].c}" ${answered?'disabled':''} onclick="ans('${k}')">${T[k].e} ${T[k].n}</button>`).join('')}</div>`;
+if(answered){const ok=answered==cur[2];h+=`<div class="fb ${ok?'ok':'bad'}">${ok?'🎉 Correct!':'Not quite. It is a '+T[cur[2]].n+'.'} ${T[cur[2]].clue}</div><div class="row" style="margin-top:12px"><button class="btn pri" onclick="cur=null;answered=false;draw()">Next →</button></div>`}
+return h+'</div>'}
+function ans(k){answered=k;sc.t++;if(k==cur[2]){sc.r++;sc.s++}else sc.s=0;draw()}
+function refView(){const r=Object.entries(T);return `<div class="card"><div class="step">Cheat Sheet</div><div class="tree" style="margin-top:8px"><span>Matter</span> › <span>Pure Substance (element, compound)</span> | <span>Mixture (solution, colloid, suspension, mechanical)</span></div><div class="info"><div><b>Pure substances:</b> fixed composition, cannot be separated physically.</div><div><b>Mixtures:</b> variable composition, can be separated physically, not chemically bonded.</div></div><table><tr><th>Type</th><th>Quick test</th><th>Examples</th></tr>${r.map(([k,t])=>`<tr><td style="color:${t.c};font-weight:800">${t.e} ${t.n}</td><td>${t.clue}</td><td>${t.ex}</td></tr>`).join('')}</table></div>`}
+const TABS=[['id','🔍 Identify'],['lab','🔤 Formula Lab'],['ch','🎯 Challenge'],['ref','📋 Cheat Sheet']];
+function draw(){$('#nav').innerHTML=TABS.map(t=>`<button class="${tab==t[0]?'on':''}" onclick="tab='${t[0]}';draw()">${t[1]}</button>`).join('');
+$('#view').innerHTML={id:idView,lab:labView,ch:chView,ref:refView}[tab]()}
+draw();
+</script>
 </body>
 </html>
